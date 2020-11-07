@@ -1,3 +1,6 @@
+* Initializing basic features
+** Loading package archives
+#+begin_src emacs-lisp :tangle yes
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
@@ -18,14 +21,26 @@ There are two things you can do about this warning:
 
 (package-initialize)
 
+#+end_src
+
+** Setting window size
+#+begin_src emacs-lisp :tangle yes
+
 (defun get-default-height ()
        (/ (- (display-pixel-height) 120)
           (frame-char-height)))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+#+end_src
+
+** Setting up use-package
+#+begin_src emacs-lisp :tangle yes
 (eval-when-compile
   (require 'use-package))
+#+end_src
 
+** Set up backup directory, turn off bell sound, load themes, and set font
+#+begin_src emacs-lisp :tangle yes
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
 (setq default-directory "/Users/baltasarsalamonwelwert/")
@@ -33,7 +48,10 @@ There are two things you can do about this warning:
 (setq ring-bell-function 'ignore)
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+#+end_src
 
+** Set theme and font
+#+begin_src emacs-lisp :tangle yes
 (use-package spacemacs-theme
 :ensure t
 :defer t)
@@ -46,11 +64,18 @@ There are two things you can do about this warning:
  '(variable-pitch ((t (:family "ETBembo" :height 140 :weight thin))))
  '(fixed-pitch ((t ( :family "Cascadia Code 12" :height 140)))))
 
+#+end_src
+
+** Hide various graphical elements
+#+begin_src emacs-lisp :tangle yes
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (turn-on-page-break-lines-mode)
+#+end_src
 
+** Dashboard
+#+begin_src emacs-lisp :tangle yes
 (use-package dashboard
   :ensure t
   :config
@@ -63,37 +88,62 @@ There are two things you can do about this warning:
   (setq dashboard-startup-banner 3)
   (dashboard-setup-startup-hook))
 
-(setq-default abbrev-mode t)
+#+end_src
 
+* Writing and editing
+** Abbrev
+#+begin_src emacs-lisp :tangle yes
+(setq-default abbrev-mode t)
+#+end_src
+
+** Olivetti
+#+begin_src emacs-lisp :tangle yes
 (use-package olivetti
   :ensure t)
+#+end_src
 
+** Flyspell
+#+begin_src emacs-lisp :tangle yes
 (use-package flyspell-correct
   :after flyspell
   :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
 
 (use-package flyspell-correct-ivy
   :after flyspell-correct)
+#+end_src
 
-(use-package ivy
-  :defer 0.1
-  :diminish
-  :bind (("C-c C-r" . ivy-resume)
-         ("C-x B" . ivy-switch-buffer-other-window))
-  :custom
-  (ivy-count-format "(%d/%d) ")
-  (ivy-use-virtual-buffers t)
-  :config (ivy-mode))
 
+* Ivy and related packages
+** Ivy
+ #+begin_src emacs-lisp :tangle yes
+ (use-package ivy
+   :defer 0.1
+   :diminish
+   :bind (("C-c C-r" . ivy-resume)
+          ("C-x B" . ivy-switch-buffer-other-window))
+   :custom
+   (ivy-count-format "(%d/%d) ")
+   (ivy-use-virtual-buffers t)
+   :config (ivy-mode))
+ #+end_src
+
+** Counsel
+#+begin_src emacs-lisp :tangle yes
 (use-package counsel
    :after ivy
    :config (counsel-mode))
+#+end_src
 
+** Swiper
+#+begin_src emacs-lisp :tangle yes
 (use-package swiper
    :after ivy
    :bind (("C-s" . swiper)
           ("C-r" . swiper)))
+#+end_src
 
+** Deft
+#+begin_src emacs-lisp :tangle yes
 (use-package deft
   :commands deft
   :init
@@ -108,8 +158,12 @@ There are two things you can do about this warning:
   :config
   (add-to-list 'deft-extensions "tex")
   )
+#+end_src
 
-(use-package ivy-bibtex
+
+* ivy-bibtex
+#+begin_src emacs-lisp :tangle yes
+ (use-package ivy-bibtex
    :ensure t
    :bind*
    ("C-c C-r" . ivy-bibtex)
@@ -137,7 +191,10 @@ There are two things you can do about this warning:
      ":END:\n\n"
      )
 )
+#+end_src
 
+* Org-ref
+#+begin_src emacs-lisp :tangle yes
 (use-package org-ref
     :ensure t
     :config
@@ -150,7 +207,10 @@ There are two things you can do about this warning:
          org-ref-notes-directory "/Users/baltasarsalamonwelwert/Dropbox/ORG/Sources/Notes/"
          org-ref-notes-function 'orb-edit-notes
 	 ))
+#+end_src
 
+* Default directories
+#+begin_src emacs-lisp :tangle yes
 (setq
    org_notes "/Users/baltasarsalamonwelwert/Dropbox/ORG/Sources/ORG-Simuvac/"
    zot_bib "/Users/baltasarsalamonwelwert/Dropbox/ORG/Sources/Notes/bibnotes.org"
@@ -158,7 +218,10 @@ There are two things you can do about this warning:
    deft-directory org_notes
    org-roam-directory org_notes
    )
+#+end_src
 
+* ORG
+#+begin_src emacs-lisp :tangle yes
 (require 'org)
 (setq org-hide-emphasis-markers t)
 (setq org-hide-leading-stars 't)
@@ -177,6 +240,10 @@ There are two things you can do about this warning:
 
 (setq org-cycle-separator-lines 1)
 
+#+end_src
+
+* ORG roam
+#+begin_src emacs-lisp :tangle yes
 (use-package org-roam
   :ensure t
   :hook (org-load . org-roam-mode)
@@ -218,6 +285,32 @@ There are two things you can do about this warning:
               :map org-mode-map
               (("C-c n i" . org-roam-insert))))
 
+#+end_src
+
+* ORG roam bibtex
+#+begin_src emacs-lisp :Tangle yes
+(use-package org-roam-bibtex
+  :after (org-roam)
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (setq org-roam-bibtex-preformat-keywords
+   '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
+  (setq orb-templates
+        '(("r" "ref" plain (function org-roam-capture--get-point)
+           ""
+           :file-name "${slug}"
+           :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+
+- tags ::
+- keywords :: ${keywords}
+
+\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+
+           :unnarrowed t))))
+#+end_src
+ 
+* ORG noter
+#+begin_src emacs-lisp :tangle yes
 (use-package org-noter
   :ensure t
   :after (:any org pdf-view)
@@ -233,21 +326,37 @@ There are two things you can do about this warning:
    org-noter-notes-search-path (list org_notes)
    )
   )
+#+end_src
 
+* PDF tools
+#+begin_src emacs-lisp :tangle yes
 (use-package pdf-tools
   :ensure t
   :config
   (setq-default pdf-view-display-size 'fit-width)
   )
+#+end_src
 
+* Company
+#+begin_src emacs-lisp :tangle yes
 (use-package company
 :ensure t
 :defer t
 )
 
+#+end_src
+
+* Company org roam
+#+begin_src emacs-lisp :tangle yes
 (use-package company-org-roam
   :ensure t
   :after org-roam
   :config
   ;;(set-company-backend! 'org-mode '(company-org-roam))
   )
+#+end_src
+
+* Local Variables
+# Local Variables:
+# eval: (add-hook 'after-save-hook (lambda ()(org-babel-tangle)) nil t)
+# End:

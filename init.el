@@ -29,21 +29,30 @@ There are two things you can do about this warning:
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
 (setq default-directory "/Users/baltasarsalamonwelwert/")
-
+  
 (setq ring-bell-function 'ignore)
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
+(setq custom-file "~/.emacs.d/emacs-custom.el")
+
+(load custom-file)
+
 (use-package spacemacs-theme
 :ensure t
 :defer t)
+
+(use-package modus-operandi-theme
+:ensure t
+:defer t)
+
 
 (set-frame-font "Cascadia Code 12")
 (load-theme 'spacemacs-light t)
 
 (custom-theme-set-faces
  'user
- '(variable-pitch ((t (:family "ETBembo" :height 140 :weight thin))))
+ '(variable-pitch ((t (:family "ETBembo" :height 140))))
  '(fixed-pitch ((t ( :family "Cascadia Code 12" :height 140)))))
 
 (menu-bar-mode -1)
@@ -112,9 +121,7 @@ There are two things you can do about this warning:
 (use-package ivy-bibtex
    :ensure t
    :bind*
-   ("C-c C-r" . ivy-bibtex)
-   :config
-   (setq ivy-bibtex-default-action #'ivy-bibtex-insert-citation))
+   ("C-c C-r" . ivy-bibtex))
 
    (setq
     bibtex-completion-notes-path "/Users/baltasarsalamonwelwert/Dropbox/ORG/Sources/Notes/"
@@ -177,47 +184,6 @@ There are two things you can do about this warning:
 
 (setq org-cycle-separator-lines 1)
 
-(use-package org-roam
-  :ensure t
-  :hook (org-load . org-roam-mode)
-  :commands (org-roam-buffer-toggle-display
-             org-roam-find-file
-             org-roam-graph
-             org-roam-insert
-             org-roam-switch-to-buffer
-             org-roam-dailies-date
-             org-roam-dailies-today
-             org-roam-dailies-tomorrow
-             org-roam-dailies-yesterday)
-  :config
-  (setq 
-        org-roam-verbose nil 
-        org-roam-buffer-no-delete-other-windows t 
-        org-roam-completion-system 'default
-	)
-  
-  ;; (add-hook 'find-file-hook
-  ;;   (defun +org-roam-open-buffer-maybe-h ()
-  ;;     (and +org-roam-open-buffer-on-find-file
-  ;;          (memq 'org-roam-buffer--update-maybe post-command-hook)
-  ;;          (not (window-parameter nil 'window-side)) ; don't proc for popups
-  ;;          (not (eq 'visible (org-roam-buffer--visibility)))
-  ;;          (with-current-buffer (window-buffer)
-  ;;            (org-roam-buffer--get-create)))))
-  
-  (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode)
-  
-   :custom
-   (org-roam-directory "/Users/baltasarsalamonwelwert/Dropbox/ORG/Org-Simuvac")
-
-   :bind (:map org-roam-mode-map
-	       (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n b" . org-roam-switch-to-buffer)
-               ("C-c n g" . org-roam-graph))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))))
-
 (use-package org-noter
   :ensure t
   :after (:any org pdf-view)
@@ -236,18 +202,15 @@ There are two things you can do about this warning:
 
 (use-package pdf-tools
   :ensure t
+  :pin manual
   :config
-  (setq-default pdf-view-display-size 'fit-width)
+   (pdf-tools-install)
+   (setq-default pdf-view-display-size 'fit-page)
   )
+   (setq pdf-view-use-scaling t)
+   (setq pdf-view-use-imagick nil)
 
 (use-package company
 :ensure t
 :defer t
 )
-
-(use-package company-org-roam
-  :ensure t
-  :after org-roam
-  :config
-  ;;(set-company-backend! 'org-mode '(company-org-roam))
-  )

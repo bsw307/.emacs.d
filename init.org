@@ -25,12 +25,10 @@ There are two things you can do about this warning:
 
 ** Setting window size
 #+begin_src emacs-lisp :tangle yes
-
 (defun get-default-height ()
        (/ (- (display-pixel-height) 120)
           (frame-char-height)))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 #+end_src
 
 ** Setting up use-package
@@ -44,25 +42,34 @@ There are two things you can do about this warning:
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
 (setq default-directory "/Users/baltasarsalamonwelwert/")
-
+  
 (setq ring-bell-function 'ignore)
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+
+(setq custom-file "~/.emacs.d/emacs-custom.el")
+
+(load custom-file)
 #+end_src
 
 ** Set theme and font
 #+begin_src emacs-lisp :tangle yes
-(use-package spacemacs-theme
-:ensure t
-:defer t)
+  (use-package spacemacs-theme
+  :ensure t
+  :defer t)
 
-(set-frame-font "Cascadia Code 12")
-(load-theme 'spacemacs-light t)
+  (use-package modus-operandi-theme
+  :ensure t
+  :defer t)
 
-(custom-theme-set-faces
- 'user
- '(variable-pitch ((t (:family "ETBembo" :height 140 :weight thin))))
- '(fixed-pitch ((t ( :family "Cascadia Code 12" :height 140)))))
+
+  (set-frame-font "Cascadia Code 12")
+  (load-theme 'spacemacs-light t)
+
+  (custom-theme-set-faces
+   'user
+   '(variable-pitch ((t (:family "ETBembo" :height 140))))
+   '(fixed-pitch ((t ( :family "Cascadia Code 12" :height 140)))))
 
 #+end_src
 
@@ -112,7 +119,6 @@ There are two things you can do about this warning:
   :after flyspell-correct)
 #+end_src
 
-
 * Ivy and related packages
 ** Ivy
  #+begin_src emacs-lisp :tangle yes
@@ -161,37 +167,35 @@ There are two things you can do about this warning:
 #+end_src
 
 
-* ivy-bibtex
-#+begin_src emacs-lisp :tangle yes
- (use-package ivy-bibtex
-   :ensure t
-   :bind*
-   ("C-c C-r" . ivy-bibtex)
-   :config
-   (setq ivy-bibtex-default-action #'ivy-bibtex-insert-citation))
+** Ivy-bibtex
+ #+begin_src emacs-lisp :tangle yes
+  (use-package ivy-bibtex
+    :ensure t
+    :bind*
+    ("C-c C-r" . ivy-bibtex))
 
-   (setq
-    bibtex-completion-notes-path "/Users/baltasarsalamonwelwert/Dropbox/ORG/Sources/Notes/"
-    bibtex-completion-bibliography "/Users/baltasarsalamonwelwert/Dropbox/ORG/Sources/lib.bib"
-    bibtex-completion-pdf-field "file"
-    bibtex-completion-notes-template-multiple-files
-    (concat
-     "#+TITLE: ${title}\n"
-     "#+ROAM_KEY: cite:${=key=}\n"
-     "* TODO Notes\n"
-     ":PROPERTIES:\n"
-     ":Custom_ID: ${=key=}\n"
-     ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
-     ":AUTHOR: ${author-abbrev}\n"
-     ":JOURNAL: ${journaltitle}\n"
-     ":DATE: ${date}\n"
-     ":YEAR: ${year}\n"
-     ":DOI: ${doi}\n"
-     ":URL: ${url}\n"
-     ":END:\n\n"
-     )
-)
-#+end_src
+    (setq
+     bibtex-completion-notes-path "/Users/baltasarsalamonwelwert/Dropbox/ORG/Sources/Notes/"
+     bibtex-completion-bibliography "/Users/baltasarsalamonwelwert/Dropbox/ORG/Sources/lib.bib"
+     bibtex-completion-pdf-field "file"
+     bibtex-completion-notes-template-multiple-files
+     (concat
+      "#+TITLE: ${title}\n"
+      "#+ROAM_KEY: cite:${=key=}\n"
+      "* TODO Notes\n"
+      ":PROPERTIES:\n"
+      ":Custom_ID: ${=key=}\n"
+      ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+      ":AUTHOR: ${author-abbrev}\n"
+      ":JOURNAL: ${journaltitle}\n"
+      ":DATE: ${date}\n"
+      ":YEAR: ${year}\n"
+      ":DOI: ${doi}\n"
+      ":URL: ${url}\n"
+      ":END:\n\n"
+      )
+ )
+ #+end_src
 
 * Org-ref
 #+begin_src emacs-lisp :tangle yes
@@ -221,121 +225,144 @@ There are two things you can do about this warning:
 #+end_src
 
 * ORG
-#+begin_src emacs-lisp :tangle yes
-(require 'org)
-(setq org-hide-emphasis-markers t)
-(setq org-hide-leading-stars 't)
-(setq org-log-into-drawer 't)
-(setq org-agenda-files (list "/Users/baltasarsalamonwelwert/Dropbox/ORG/Planner"
-			     "/Users/baltasarsalamonwelwert/Dropbox/ORG/Classes"))
 
-(setq org-capture-bookmark nil)
-;;(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cc" 'org-capture)
-;;(global-set-key "\C-cb" 'org-iswitchb)
+** ORG
+ #+begin_src emacs-lisp :tangle yes
+ (require 'org)
+ (setq org-hide-emphasis-markers t)
+ (setq org-hide-leading-stars 't)
+ (setq org-log-into-drawer 't)
+ (setq org-agenda-files (list "/Users/baltasarsalamonwelwert/Dropbox/ORG/Planner"
+			      "/Users/baltasarsalamonwelwert/Dropbox/ORG/Classes"))
 
-(add-hook 'org-mode-hook 'visual-line-mode)
-(add-hook 'org-mode-hook 'flyspell-mode)
+ (setq org-capture-bookmark nil)
+ ;;(global-set-key "\C-cl" 'org-store-link)
+ (global-set-key "\C-ca" 'org-agenda)
+ (global-set-key "\C-cc" 'org-capture)
+ ;;(global-set-key "\C-cb" 'org-iswitchb)
 
-(setq org-cycle-separator-lines 1)
+ (add-hook 'org-mode-hook 'visual-line-mode)
+ (add-hook 'org-mode-hook 'flyspell-mode)
 
-#+end_src
+ (setq org-cycle-separator-lines 1)
 
-* ORG roam
-#+begin_src emacs-lisp :tangle yes
-(use-package org-roam
-  :ensure t
-  :hook (org-load . org-roam-mode)
-  :commands (org-roam-buffer-toggle-display
-             org-roam-find-file
-             org-roam-graph
-             org-roam-insert
-             org-roam-switch-to-buffer
-             org-roam-dailies-date
-             org-roam-dailies-today
-             org-roam-dailies-tomorrow
-             org-roam-dailies-yesterday)
-  :config
-  (setq 
-        org-roam-verbose nil 
-        org-roam-buffer-no-delete-other-windows t 
-        org-roam-completion-system 'default
-	)
+ #+end_src
+
+** ORG roam
+ #+begin_src emacs-lisp :tangle no
+ (use-package org-roam
+   :ensure t
+   :hook (org-load . org-roam-mode)
+   :commands (org-roam-buffer-toggle-display
+              org-roam-find-file
+              org-roam-graph
+              org-roam-insert
+              org-roam-switch-to-buffer
+              org-roam-dailies-date
+              org-roam-dailies-today
+              org-roam-dailies-tomorrow
+              org-roam-dailies-yesterday)
+   :config
+   (setq 
+         org-roam-verbose nil 
+         org-roam-buffer-no-delete-other-windows t 
+         org-roam-completion-system 'default
+	 )
   
-  ;; (add-hook 'find-file-hook
-  ;;   (defun +org-roam-open-buffer-maybe-h ()
-  ;;     (and +org-roam-open-buffer-on-find-file
-  ;;          (memq 'org-roam-buffer--update-maybe post-command-hook)
-  ;;          (not (window-parameter nil 'window-side)) ; don't proc for popups
-  ;;          (not (eq 'visible (org-roam-buffer--visibility)))
-  ;;          (with-current-buffer (window-buffer)
-  ;;            (org-roam-buffer--get-create)))))
+   ;; (add-hook 'find-file-hook
+   ;;   (defun +org-roam-open-buffer-maybe-h ()
+   ;;     (and +org-roam-open-buffer-on-find-file
+   ;;          (memq 'org-roam-buffer--update-maybe post-command-hook)
+   ;;          (not (window-parameter nil 'window-side)) ; don't proc for popups
+   ;;          (not (eq 'visible (org-roam-buffer--visibility)))
+   ;;          (with-current-buffer (window-buffer)
+   ;;            (org-roam-buffer--get-create)))))
   
-  (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode)
+   (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode)
   
-   :custom
-   (org-roam-directory "/Users/baltasarsalamonwelwert/Dropbox/ORG/Org-Simuvac")
+    :custom
+    (org-roam-directory "/Users/baltasarsalamonwelwert/Dropbox/ORG/Org-Simuvac")
 
-   :bind (:map org-roam-mode-map
-	       (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n b" . org-roam-switch-to-buffer)
-               ("C-c n g" . org-roam-graph))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))))
+    :bind (:map org-roam-mode-map
+		(("C-c n l" . org-roam)
+		("C-c n f" . org-roam-find-file)
+		("C-c n b" . org-roam-switch-to-buffer)
+		("C-c n g" . org-roam-graph))
+               :map org-mode-map
+               (("C-c n i" . org-roam-insert))))
 
-#+end_src
+ #+end_src
 
-* ORG roam bibtex
-#+begin_src emacs-lisp :Tangle yes
-(use-package org-roam-bibtex
-  :after (org-roam)
-  :hook (org-roam-mode . org-roam-bibtex-mode)
-  :config
-  (setq org-roam-bibtex-preformat-keywords
-   '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
-  (setq orb-templates
-        '(("r" "ref" plain (function org-roam-capture--get-point)
-           ""
-           :file-name "${slug}"
-           :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+** ORG roam bibtex
+ #+begin_src emacs-lisp :Tangle no
+ (use-package org-roam-bibtex
+   :after (org-roam)
+   :hook (org-roam-mode . org-roam-bibtex-mode)
+   :config
+   (setq org-roam-bibtex-preformat-keywords
+    '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
+   (setq orb-templates
+         '(("r" "ref" plain (function org-roam-capture--get-point)
+            ""
+            :file-name "${slug}"
+            :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
 
-- tags ::
-- keywords :: ${keywords}
+ - tags ::
+ - keywords :: ${keywords}
 
-\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+ \n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
 
-           :unnarrowed t))))
-#+end_src
+            :unnarrowed t))))
+ #+end_src
  
-* ORG noter
-#+begin_src emacs-lisp :tangle yes
-(use-package org-noter
-  :ensure t
-  :after (:any org pdf-view)
-  :config
-  (setq
-   ;; The WM can handle splits
-   org-noter-notes-window-location 'other-frame
-   ;; Please stop opening frames
-   org-noter-always-create-frame nil
-   ;; I want to see the whole file
-   org-noter-hide-other nil
-   ;; Everything is relative to the main notes file
-   org-noter-notes-search-path (list org_notes)
+** ORG noter
+ #+begin_src emacs-lisp :tangle yes
+ (use-package org-noter
+   :ensure t
+   :after (:any org pdf-view)
+   :config
+   (setq
+    ;; The WM can handle splits
+    org-noter-notes-window-location 'other-frame
+    ;; Please stop opening frames
+    org-noter-always-create-frame nil
+    ;; I want to see the whole file
+    org-noter-hide-other nil
+    ;; Everything is relative to the main notes file
+    org-noter-notes-search-path (list org_notes)
+    )
    )
-  )
-#+end_src
+ #+end_src
+
+** Company org roam
+ #+begin_src emacs-lisp :tangle no
+ (use-package company-org-roam
+   :ensure t
+   :after org-roam
+   :config
+   ;;(set-company-backend! 'org-mode '(company-org-roam))
+   )
+ #+end_src
 
 * PDF tools
+To install pdf-tools on OS X, you have to run 
+#+begin_src bash :tangle no
+brew install poppler automake
+brew tap dunn/emacs
+#+end_src
+
 #+begin_src emacs-lisp :tangle yes
 (use-package pdf-tools
   :ensure t
+  :pin manual
   :config
-  (setq-default pdf-view-display-size 'fit-width)
+   (pdf-tools-install)
+   (setq-default pdf-view-display-size 'fit-page)
   )
+   (setq pdf-view-use-scaling t)
+   (setq pdf-view-use-imagick nil)
 #+end_src
+Then call M-x pdf-tools-install. This produces an error, which you copy and paste into the terminal.
 
 * Company
 #+begin_src emacs-lisp :tangle yes
@@ -344,16 +371,6 @@ There are two things you can do about this warning:
 :defer t
 )
 
-#+end_src
-
-* Company org roam
-#+begin_src emacs-lisp :tangle yes
-(use-package company-org-roam
-  :ensure t
-  :after org-roam
-  :config
-  ;;(set-company-backend! 'org-mode '(company-org-roam))
-  )
 #+end_src
 
 * Local Variables

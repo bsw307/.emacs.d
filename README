@@ -1,4 +1,4 @@
-# My Emacs configuration files, for your viewing pleasure.
+#My Emacs configuration files, for your viewing pleasure.
 
 ## Philosophy
 I have considered a number of configurations for Emacs, starting from a bare-bones download, spacemacs, and now, doom-emacs. I have settled uneasily at the latter because I found so much of the legwork was done for me by doom, while there was still enough extensibility to suit my needs. However, I have noticed performance issues as of late, and will be making changes.
